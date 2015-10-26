@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by Carolina on 21/10/2015.
  */
-public class GroupsCollections {
+public class GroupsCollection {
     @InjectLinks({})
     private List<Link> links;
     private long newestTimestamp;
