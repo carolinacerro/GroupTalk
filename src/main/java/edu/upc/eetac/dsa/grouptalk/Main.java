@@ -6,6 +6,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 
 import java.io.IOException;
 import java.net.URI;
+import java.sql.SQLException;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
@@ -15,16 +16,16 @@ import java.util.ResourceBundle;
  *
  */
 public class Main {
+    // Base URI the Grizzly HTTP server will listen on
     private static String baseURI;
 
-    public static String getBaseURI() {
+    public final static String getBaseURI() {
         if (baseURI == null) {
             PropertyResourceBundle prb = (PropertyResourceBundle) ResourceBundle.getBundle("grouptalk");
             baseURI = prb.getString("grouptalk.context");
         }
         return baseURI;
     }
-
 
     /**
      * Starts Grizzly HTTP server exposing JAX-RS resources defined in this application.
@@ -39,16 +40,25 @@ public class Main {
         // exposing the Jersey application at BASE_URI
         return GrizzlyHttpServerFactory.createHttpServer(URI.create(getBaseURI()), rc);
     }
-
     /**
      * Main method.
      * @param args
      * @throws IOException
      */
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, SQLException {
         final HttpServer server = startServer();
+
+        /*//Admin user creator
+        UserDAO userDAO = new UserDAOImpl();
+        User user = null;
+        AuthToken authenticationToken = null;
+        user = userDAO.createAdmin();
+        authenticationToken = (new AuthTokenDAOImpl()).createAuthToken(user.getId());
+        System.out.println("Admin User created");*/
+
+        System.out.println("User 'Admin' has been already created");
         System.out.println(String.format("Jersey app started with WADL available at "
-                + "%sapplication.wadl\nHit enter to stop it...",baseURI));
+                + "%sapplication.wadl\nHit enter to stop it...", baseURI));
         System.in.read();
         server.shutdownNow();
     }
